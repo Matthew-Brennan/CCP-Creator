@@ -1,9 +1,23 @@
 public with sharing class CCPCreatorController {
-    public CCPCreatorController() {
 
-    }
+    public static Map<String, Object> getRecord(string oppId){
+        
+        Opportunity opp = [SELECT Id, of_Hours__c, CCP_Level__c, CCP_Total__c, CCP_Discount_Rate__c, CCP_Discount_Amount__c, CCP_Total_Amount__c, Account.Id
+                            FROM Opportunity WHERE Id = :oppId ];
 
-    public static Account getAccount(string accId){
-        Account acc = [SELECT Id, Standard_Hourly_Rate_Sr__c FROM Account WHERE Id = :accId ];
+        Account acc = [SELECT Id, Standard_Hourly_Rate_Sr__c FROM Account WHERE Id = :opp.Account.Id ];
+
+        Map<String, Object> flattenedRecord = new Map<String, Object>{
+            'CCP' => opp.CreatedDate,
+            'StandardHourlyRate' => acc.Standard_Hourly_Rate_Sr__c,
+            'ofHours' => opp.of_Hours__c,
+            'CCPTotatlWithoutDiscount' => opp.CCP_Total__c,
+            'CCPDiscountRate' => opp.CCP_Discount_Rate__c,
+            'CCPDiscountAmount' => opp.CCP_Discount_Amount__c,
+            'CCPClientPriceWithDiscount' => opp.CCP_Total_Amount__c
+            };
+
+            return flattenedRecord;
+
     }
 }
