@@ -1,23 +1,79 @@
 <template>
-    <lightning-card title="CCP Fields">
+    <lightning-card title="CCP Fields" icon-name="standard:pricebook">
         <div class="slds-p-around_medium">
-            <div class="slds-grid slds-wrap">
-                <div class="slds-col slds-size_1-of-2 slds-p-horizontal_x-small">
-                    <lightning-output-field field-name="CCP"></lightning-output-field>
+            <template if:true={record}>
+                <lightning-combobox
+                    label="CCP Type"
+                    name="CCP"
+                    value={record.CCP}
+                    options={ccpOptions}
+                    onchange={handleChange}>
+                </lightning-combobox>
+                <lightning-input
+                    label="Client Hourly Rate"
+                    name="StandardHourlyRate"
+                    value={record.StandardHourlyRate}
+                    type="number"
+                    formatter="currency"
+                    step="0.01"
+                    readonly>
+                </lightning-input>
+                <lightning-input
+                    label="# of Hours"
+                    name="ofHours"
+                    value={record.ofHours}
+                    type="number"
+                    readonly>
+                </lightning-input>
+                <lightning-input
+                    label="Total Without Discount"
+                    name="CCPTotatlWithoutDiscount"
+                    value={record.CCPTotatlWithoutDiscount}
+                    type="number"
+                    formatter="currency"
+                    step="0.01"
+                    readonly>
+                </lightning-input>
+                <lightning-input
+                    label="Discount Rate (%)"
+                    name="CCPDiscountRate"
+                    value={record.CCPDiscountRate}
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    readonly>
+                </lightning-input>
+                <lightning-input
+                    label="Discount Amount"
+                    name="CCPDiscountAmount"
+                    value={record.CCPDiscountAmount}
+                    type="number"
+                    formatter="currency"
+                    step="0.01"
+                    readonly>
+                </lightning-input>
+                <lightning-input
+                    label="Client Price with Discount"
+                    name="CCPClientPriceWithDiscount"
+                    value={record.CCPClientPriceWithDiscount}
+                    type="number"
+                    formatter="currency"
+                    step="0.01"
+                    readonly>
+                </lightning-input>
+                <lightning-button
+                    label="Save"
+                    onclick={handleSave}
+                    class="slds-m-top_medium"
+                    variant="brand">
+                </lightning-button>
+            </template>
+            <template if:true={error}>
+                <div class="slds-text-color_error">
+                    {error}
                 </div>
-                <div class="slds-col slds-size_1-of-2 slds-p-horizontal_x-small">
-                    <lightning-output-field field-name="CCP_Total_Amount__c"></lightning-output-field>
-                </div>
-                <div class="slds-col slds-size_1-of-2 slds-p-horizontal_x-small">
-                    <lightning-output-field field-name="CCP_Discount_Amount__c"></lightning-output-field>
-                </div>
-                <div class="slds-col slds-size_1-of-2 slds-p-horizontal_x-small">
-                    <lightning-output-field field-name="CCP_Discount_Rate__c"></lightning-output-field>
-                </div>
-                <div class="slds-col slds-size_1-of-2 slds-p-horizontal_x-small">
-                    <lightning-output-field field-name="CCP_Total__c"></lightning-output-field>
-                </div>
-            </div>
+            </template>
         </div>
     </lightning-card>
 </template>

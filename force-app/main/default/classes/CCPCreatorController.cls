@@ -1,14 +1,19 @@
 public with sharing class CCPCreatorController {
 
-    public static Map<String, Object> getRecord(string oppId){
+    @AuraEnabled(cacheable=true)
+    public static Map<String, Object> getCCPFields(string oppId){
         
         Opportunity opp = [SELECT Id, of_Hours__c, CCP_Level__c, CCP_Total__c, CCP_Discount_Rate__c, CCP_Discount_Amount__c, CCP_Total_Amount__c, Account.Id
                             FROM Opportunity WHERE Id = :oppId ];
 
         Account acc = [SELECT Id, Standard_Hourly_Rate_Sr__c FROM Account WHERE Id = :opp.Account.Id ];
 
+        System.debug('Opp: '+opp);
+        System.debug('Acc: '+acc);
+
+
         Map<String, Object> flattenedRecord = new Map<String, Object>{
-            'CCP' => opp.CreatedDate,
+            'CCP' => opp.CCP_Level__c,
             'StandardHourlyRate' => acc.Standard_Hourly_Rate_Sr__c,
             'ofHours' => opp.of_Hours__c,
             'CCPTotatlWithoutDiscount' => opp.CCP_Total__c,
