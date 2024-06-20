@@ -54,12 +54,8 @@ export default class DisplayCCPFields extends LightningElement {
     handleSave() {
         const fields = {};
         fields['Id'] = this.recordId;
-        fields['of_Hours__c'] = this.record.ofHours;
         fields['CCP_Level__c'] = this.record.CCP;
-        fields['CCP_Total__c'] = this.record.CCPTotatlWithoutDiscount;
-        fields['CCP_Discount_Rate__c'] = this.record.CCPDiscountRate;
-        fields['CCP_Discount_Amount__c'] = this.record.CCPDiscountAmount;
-        fields['CCP_Total_Amount__c'] = this.record.CCPClientPriceWithDiscount;
+
 
         const recordInput = { fields };
 
