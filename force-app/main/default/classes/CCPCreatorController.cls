@@ -8,10 +8,6 @@ public with sharing class CCPCreatorController {
 
         Account acc = [SELECT Id, Standard_Hourly_Rate_Sr__c FROM Account WHERE Id = :opp.Account.Id ];
 
-        System.debug('Opp: '+opp);
-        System.debug('Acc: '+acc);
-
-
         Map<String, Object> flattenedRecord = new Map<String, Object>{
             'CCP' => opp.CCP_Level__c,
             'StandardHourlyRate' => acc.Standard_Hourly_Rate_Sr__c,

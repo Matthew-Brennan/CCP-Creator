@@ -1,5 +1,6 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import getFields from '@salesforce/apex/CCPCreatorController.getCCPFields';
+import createProduct from '@salesforce/apex/CCPCreateOppProduct.CCPCreateOppProduct';
 import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import CCP_FIELD from '@salesforce/schema/Opportunity.CCP_Level__c';
@@ -78,6 +79,34 @@ export default class DisplayCCPFields extends LightningElement {
                 );
             });
     }
+
+
+    handleCreateProduct() {
+        createProduct({ oppId: this.recordId, clientUnitPrice: this.record.CCPClientPriceWithDiscount })
+            .then(result => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: result,
+                        variant: 'success'
+                    })
+                );
+                return refreshApex(this.wiredRecordResult);
+            })
+            .catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error creating Opportunity Product',
+                        message: error.body ? error.body.message : 'An error occurred',
+                        variant: 'error'
+                    })
+                );
+            });
+    }
+
+
+
+
     refreshData(){
         return refreshApex(this.wiredRecordResult); // Refresh the data
     }

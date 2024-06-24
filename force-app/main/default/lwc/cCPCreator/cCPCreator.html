@@ -1,13 +1,13 @@
 <template>
     <lightning-card title="CCP Fields" icon-name="standard:pricebook">
-        <lightning-button-icon
+        <div class="slds-p-around_medium">
+            <lightning-button-icon
                 icon-name="utility:refresh"
                 alternative-text="Refresh"
                 onclick={refreshData}
                 class="slds-m-top_medium"
                 variant="bare">
             </lightning-button-icon>
-        <div class="slds-p-around_medium">
             <template if:true={record}>
                 <lightning-combobox
                     label="CCP Type"
@@ -72,6 +72,12 @@
                 <lightning-button
                     label="Save"
                     onclick={handleSave}
+                    class="slds-m-top_medium"
+                    variant="brand">
+                </lightning-button>
+                <lightning-button
+                    label="Create Opportunity Product"
+                    onclick={handleCreateProduct}
                     class="slds-m-top_medium"
                     variant="brand">
                 </lightning-button>
