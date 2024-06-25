@@ -1,22 +1,22 @@
 public with sharing class CCPCreateOppProduct {
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static String CCPCreateOppProduct(String oppId, Decimal clientUnitPrice) {
         try {
             // Fetch the Opportunity
-            Opportunity opp = [SELECT Id, AccountId FROM Opportunity WHERE Id = :oppId LIMIT 1];
+            Opportunity opp = [SELECT Id, AccountId, Pricebook2Id, 	of_Hours__c FROM Opportunity WHERE Id = :oppId LIMIT 1];
 
             // Fetch the Product2 record for "CCP"
-            Product2 product = [SELECT Id FROM Product2 WHERE Name = 'CCP Contract' LIMIT 1];
+            Product2 product = [SELECT Id, Name FROM Product2 WHERE Name = 'CCP Contract' LIMIT 1];
 
             system.debug('@@@Opp ' +opp);
-            system.debug('@@@Product ' +product.Id);
+            system.debug('@@@Product ' +product);
 
             // Fetch the PricebookEntry record for the product in the standard price book
             PricebookEntry pbe = [
                 SELECT Id
                 FROM PricebookEntry
-                WHERE Product2Id = :product.Id AND Pricebook2.Id = '01s300000000XpNAAU'
+                WHERE Product2.Name = :product.Name AND Pricebook2Id = :opp.Pricebook2Id
                 LIMIT 1
             ];
 
@@ -29,10 +29,11 @@ public with sharing class CCPCreateOppProduct {
             oli.OpportunityId = opp.Id;
             oli.PricebookEntryId = pbe.Id;
             oli.Quantity = 1;
-            oli.UnitPrice = clientUnitPrice;
-            oli.Description = 'CCP';
-            //oli.Vendor_Account__c = 'Eastbay I.T. Consulting'; // Assuming there is a custom field for vendor account
-            oli.QuoteCategory__c = 'Hardware'; // Assuming there is a custom field for quote category
+            oli.UnitPrice = 0;
+            oli.Client_Unit_Price__c = clientUnitPrice;
+            oli.Product_Details__c = opp.of_Hours__c + ' Hours CCP';
+            oli.Vendor_Account__c = '00130000004rCgEAAU'; //set the vendor to Eastbay I.T. Consulting
+            oli.QuoteCategory__c = 'Hardware'; 
 
             system.debug('@@@OLI ' + oli);
             insert oli;
