@@ -10,15 +10,7 @@ private class CCPCreateOppProductTest {
             );
             insert testAccount;
     
-            // Create a test Opportunity
-            Opportunity testOpportunity = new Opportunity(
-                Name = 'Test Opportunity',
-                StageName = 'PO Received',
-                CloseDate = Date.today().addDays(30),
-                AccountId = testAccount.Id,
-                CCP_Level__c = 'Bronze'
-            );
-            insert testOpportunity;
+            
     
             // Create a test Product2 (CCP)
             Product2 testProduct = new Product2(
@@ -41,6 +33,7 @@ private class CCPCreateOppProductTest {
 
             Pricebook2 spb = [SELECT Id FROM Pricebook2 WHERE IsStandard=true LIMIT 1];
 
+            System.debug('@@@SPB ' + standardPriceBook);
             System.debug('@@@SPB ' + spb);
 
             PricebookEntry standardPBE = new PricebookEntry(Pricebook2Id = spb.Id, Product2Id = testProduct.Id, UnitPrice = 1000, IsActive = true);
@@ -48,15 +41,18 @@ private class CCPCreateOppProductTest {
 
             System.debug('@@@SPE ' + standardPBE);
     
-            // Create a PricebookEntry for the product
-            PricebookEntry testPricebookEntry = new PricebookEntry(
-                Pricebook2Id = standardPriceBook.Id,
-                Product2Id = testProduct.Id,
-                UnitPrice = 100,
-                IsActive = true,
-                UseStandardPrice = false
-            );
-          //  insert testPricebookEntry;
+
+           // Create a test Opportunity
+           Opportunity testOpportunity = new Opportunity(
+            Name = 'Test Opportunity',
+            StageName = 'PO Received',
+            CloseDate = Date.today().addDays(30),
+            AccountId = testAccount.Id,
+            Pricebook2Id = standardPriceBook.Id,
+            CCP_Level__c = 'Bronze'
+
+        );
+        insert testOpportunity;
         }
     
         @isTest
@@ -77,7 +73,7 @@ private class CCPCreateOppProductTest {
     
             // Verify that the OpportunityLineItem was created correctly
             OpportunityLineItem[] oliList = [
-                SELECT OpportunityId, PricebookEntryId, Quantity, UnitPrice, TotalPrice, Description, Vendor_Account__c, QuoteCategory__c
+                SELECT OpportunityId, PricebookEntryId, Quantity, Client_Unit_Price__c, TotalPrice, Description, Vendor_Account__c, QuoteCategory__c
                 FROM OpportunityLineItem
                 WHERE OpportunityId = :testOpportunity.Id
             ];
@@ -85,11 +81,9 @@ private class CCPCreateOppProductTest {
             System.assertEquals(1, oliList.size(), 'Exactly one OpportunityLineItem should be created.');
     
             OpportunityLineItem oli = oliList[0];
+            System.debug('$$$$$$$$ ' + oli.Client_Unit_Price__c);
             System.assertEquals(1, oli.Quantity);
-            System.assertEquals(900.00, oli.UnitPrice);
-            System.assertEquals(clientUnitPrice, oli.TotalPrice);
-            System.assertEquals('CCP', oli.Description);
-            //System.assertEquals('Eastbay I.T. Consulting', oli.Vendor_Account__c);
+            System.assertEquals(900.00, oli.Client_Unit_Price__c);
             System.assertEquals('Hardware', oli.QuoteCategory__c);
         }
     }

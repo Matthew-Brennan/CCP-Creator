@@ -9,9 +9,6 @@ public with sharing class CCPCreateOppProduct {
             // Fetch the Product2 record for "CCP"
             Product2 product = [SELECT Id, Name FROM Product2 WHERE Name = 'CCP Contract' LIMIT 1];
 
-            system.debug('@@@Opp ' +opp);
-            system.debug('@@@Product ' +product);
-
             // Fetch the PricebookEntry record for the product in the standard price book
             PricebookEntry pbe = [
                 SELECT Id
@@ -20,9 +17,6 @@ public with sharing class CCPCreateOppProduct {
                 LIMIT 1
             ];
 
-            system.debug('@@@Opp ' +opp);
-            system.debug('@@@Product ' +product);
-            system.debug('@@@PB ' + pbe);
 
             // Create the OpportunityLineItem (Opportunity Product)
             OpportunityLineItem oli = new OpportunityLineItem();
