@@ -82,9 +82,6 @@ export default class DisplayCCPFields extends LightningElement {
 
 
     handleCreateProduct() {
-        console.log('recordID: ' + this.recordId);
-        console.log('clientUnitPrice: ' + this.record.CCPClientPriceWithDiscount);
-
         createProduct({ oppId: this.recordId, clientUnitPrice: this.record.CCPClientPriceWithDiscount })
             .then(result => {
                 this.dispatchEvent(

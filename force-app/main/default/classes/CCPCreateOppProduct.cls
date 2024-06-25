@@ -28,8 +28,7 @@ public with sharing class CCPCreateOppProduct {
             oli.Product_Details__c = opp.of_Hours__c + ' Hours CCP';
             oli.Vendor_Account__c = '00130000004rCgEAAU'; //set the vendor to Eastbay I.T. Consulting
             oli.QuoteCategory__c = 'Hardware'; 
-
-            system.debug('@@@OLI ' + oli);
+            
             insert oli;
 
             return 'Opportunity Product created successfully.';

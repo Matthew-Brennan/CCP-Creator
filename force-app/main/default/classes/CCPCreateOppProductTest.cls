@@ -33,14 +33,8 @@ private class CCPCreateOppProductTest {
 
             Pricebook2 spb = [SELECT Id FROM Pricebook2 WHERE IsStandard=true LIMIT 1];
 
-            System.debug('@@@SPB ' + standardPriceBook);
-            System.debug('@@@SPB ' + spb);
-
             PricebookEntry standardPBE = new PricebookEntry(Pricebook2Id = spb.Id, Product2Id = testProduct.Id, UnitPrice = 1000, IsActive = true);
-            insert standardPBE;
-
-            System.debug('@@@SPE ' + standardPBE);
-    
+            insert standardPBE;    
 
            // Create a test Opportunity
            Opportunity testOpportunity = new Opportunity(
@@ -81,7 +75,6 @@ private class CCPCreateOppProductTest {
             System.assertEquals(1, oliList.size(), 'Exactly one OpportunityLineItem should be created.');
     
             OpportunityLineItem oli = oliList[0];
-            System.debug('$$$$$$$$ ' + oli.Client_Unit_Price__c);
             System.assertEquals(1, oli.Quantity);
             System.assertEquals(900.00, oli.Client_Unit_Price__c);
             System.assertEquals('Hardware', oli.QuoteCategory__c);
